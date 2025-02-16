@@ -1,9 +1,12 @@
+import os
 import pandas as pd
 from prophet import Prophet
 import json
 import requests
 import urllib.parse
-BASE_URL="https://defai.onrender.com"
+
+BASE_URL = "https://defai.onrender.com"
+
 def calculate_aggregate_score(sentiments):
     total_weighted_score = 0
     total_confidence = 0
@@ -16,7 +19,7 @@ def calculate_aggregate_score(sentiments):
             score = 1
         elif sentiment == "negative":
             score = -1
-        else: 
+        else:
             score = 0
 
         total_weighted_score += score * confidence
@@ -29,38 +32,38 @@ def calculate_aggregate_score(sentiments):
     return round(aggregate_score, 4)
 
 
-def system_prompt_sentiment(coin:str):
+def system_prompt_sentiment(coin: str):
     coin_name = coin 
-    SystemPrompt=f'''
+    system_prompt = f'''
             Task: 
                 Analyze the sentiment of the following tweet about {coin_name}.
                 Classify it as positive, negative, or neutral and provide a confidence score (0-100%).
-    
+
             Rules:
-                If the tweet expresses excitement, growth, or optimism of {coin_name}, mark it positive./
-                If it contains doubt, loss, or negativity, mark it negative of {coin_name}./
-                If it’s neutral or factual, mark it neutral of {coin_name}./
-                The confidence score reflects the strength of sentiment./        
+                If the tweet expresses excitement, growth, or optimism about {coin_name}, mark it positive.
+                If it contains doubt, loss, or negativity, mark it negative.
+                If it’s neutral or factual, mark it neutral.
+                The confidence score reflects the strength of sentiment.
         '''
-    return SystemPrompt
+    return system_prompt
     
-def system_predict(coin:str,score:int):
-    SystemPrompt=f'''
-        
-            You are an advanced financial AI assisting in cryptocurrency price forecasting./
-            You will analyze current and predicted price (predicted using Prophet Model) and sentiment score of {coin} is {score} to improve price predictions./
-            Higher positive sentiment score may increase the price, while negative sentiment score may decrease it./ 
-            Ensure that the effect is realistic and aligns with past market behavior./ 
-            Return the adjusted price forecast in a structured JSON format./
-            
-            
-           
+
+def system_predict(coin: str, score: int):
+    system_prompt = f'''
+            You are an advanced financial AI assisting in cryptocurrency price forecasting.
+            You will analyze current and predicted prices (predicted using Prophet Model) and the sentiment score for {coin} is {score} to improve price predictions.
+            Higher positive sentiment may increase the price, while negative sentiment may decrease it.
+            Ensure that the effect is realistic and aligns with past market behavior.
+            Return the adjusted price forecast in a structured JSON format.
         '''
-    return SystemPrompt
-def predictprice(coin:str,t:int):
-    results={}
-    for dex in range(1,4):
-        df = pd.read_csv(f'Data\{coin}_dex_{dex}.csv')
+    return system_prompt
+
+
+def predictprice(coin: str, t: int):
+    results = {}
+    for dex in range(1, 4):
+        file_path = os.path.join("Data", f"{coin}_dex_{dex}.csv")
+        df = pd.read_csv(file_path)
         df['snapped_at'] = pd.to_datetime(df['snapped_at']).dt.tz_localize(None)
         df = df.rename(columns={'snapped_at': 'ds', 'price': 'y'})
         m = Prophet()
@@ -78,6 +81,7 @@ def predictprice(coin:str,t:int):
         }
 
     return results
+
 
 def extract_json_from_string(s):
     start = s.find('{')  
