@@ -149,7 +149,7 @@ class GroqChatbot:
                 "selling_dex": selling_dex,
                 "sell_price": dex_prices[selling_dex]["predicted_price"],
                 "change_val":change_val,
-                "change _per":percentage_change
+                "change_per":percentage_change
             }
         except Exception as e:
             print("Error processing predicting coins:", e)
