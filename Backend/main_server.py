@@ -1,8 +1,8 @@
 import argparse
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from groq import GroqChatbot
-from util import load_agent  
+from Sonic.server.groq import GroqChatbot
+from Sonic.server.util import load_agent  
 
 # BASE_URL is defined in groq.py; it's not used here directly.
 

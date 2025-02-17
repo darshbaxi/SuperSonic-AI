@@ -1,7 +1,7 @@
 import json
 import requests
 from flask import jsonify
-from util import (
+from Sonic.server.util import (
     calculate_aggregate_score,
     system_prompt_sentiment,
     predictprice,
