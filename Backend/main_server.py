@@ -2,7 +2,8 @@ import argparse
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from Sonic.server.groq import GroqChatbot
-from Sonic.server.util import load_agent  
+from Sonic.server.util import load_agent 
+from Sonic.server.twitter import post_tweet 
 
 # BASE_URL is defined in groq.py; it's not used here directly.
 
@@ -44,7 +45,19 @@ def create_app():
         response = bot.sentiment_coins(coin, t, tweets)
         return jsonify({"result": response})
     
+    @app.route("/tweet", methods=["POST"])
+    def tweet():
+        try:
+            data = request.get_json()
+            if not data or "tweet_text" not in data:
+                return jsonify({"error": "Missing tweet_text parameter"}), 400
+            result = post_tweet(data["tweet_text"])
+            return jsonify(result)
+        except Exception as e:
+            return jsonify({"error": f"Server error: {str(e)}"}), 500
+       
     return app
+
 
 def start_flask(port):
     app = create_app()
