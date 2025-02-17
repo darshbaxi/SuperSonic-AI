@@ -1,6 +1,7 @@
 import requests
 import urllib.parse
-
+import json
+from util import extract_json_from_string
 BASE_URL = 'https://defai.onrender.com'  # Change to your server's URL
 
 # GET / - Server status
@@ -56,13 +57,40 @@ def get_connection_actions(name):
     except requests.exceptions.RequestException as e:
         print(f'Error fetching actions for connection "{name}":', e)
 
+def post_tweet():
+    payload = {
+        "connection": "twitter",
+        "action": "post-tweet",
+        "params": "hello from zerepy",
+    }
+    url = f"{BASE_URL}/agent/action"
+    try:
+        response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
+        response.raise_for_status()
+        data = response.json()
+        print(data)
+        if not data or "result" not in data:
+            return {"error": "Failed to fetch response from Groq."}
+        result = data["result"]
+        if isinstance(result, str):
+            try:
+                result = extract_json_from_string(result)
+                result = json.loads(result)
+            except json.JSONDecodeError:
+                return {"error": "Invalid JSON response from bot.trending_coins"}
+        return result
+    except Exception as e:
+        print("Error executing trending_coins action:", e)
+        return {"error": "Failed to fetch response from Groq."}
+
 # Example usage:
 def main():
     get_server_status()
     get_agents()
     load_agent('starter')        # Replace 'exampleAgent' with a valid agent name
-    get_connections()
-    get_connection_actions('groq')  # Replace 'exampleConn' with a valid connection name
+    get_connection_actions('twitter')  # Replace 'exampleConn' with a valid connection name
+    # get_connections()
+    post_tweet()
 
 if __name__ == '__main__':
     main()

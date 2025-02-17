@@ -139,14 +139,17 @@ class GroqChatbot:
             
             buying_dex = min(dex_prices, key=lambda d: dex_prices[d]["current_price"])
             selling_dex = max(dex_prices, key=lambda d: dex_prices[d]["predicted_price"])
-            
+            change_val = dex_prices[selling_dex]["predicted_price"] - dex_prices[buying_dex]["current_price"]
+            percentage_change = (change_val / dex_prices[buying_dex]["current_price"]) * 100
             result = {
-                "score": sentiment_score,
+                "score": (sentiment_score+1)/2,
                 "dex": dex_prices,
                 "buying_dex": buying_dex,
                 "buy_price": dex_prices[buying_dex]["current_price"],
                 "selling_dex": selling_dex,
                 "sell_price": dex_prices[selling_dex]["predicted_price"],
+                "change_val":change_val,
+                "change _per":percentage_change
             }
         except Exception as e:
             print("Error processing predicting coins:", e)
