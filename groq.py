@@ -125,6 +125,7 @@ class GroqChatbot:
             "action": "generate-text",
             "params": [json.dumps(predicted_price, indent=4, default=str), prompt],
         }
+        result={}
         try:
             response_price = requests.post(url, json=payload_price, headers={"Content-Type": "application/json"})
             response_price.raise_for_status()
@@ -152,5 +153,5 @@ class GroqChatbot:
                 "change_per":percentage_change
             }
         except Exception as e:
-            print("Error processing predicting coins:", e)
+            print("Error processing predicting price:", e)
         return result
