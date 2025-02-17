@@ -57,6 +57,7 @@ class GroqChatbot:
             response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
             response.raise_for_status()
             data = response.json()
+            print(data)
             if not data or "result" not in data:
                 return {"error": "Failed to fetch response from Groq."}
             result = data["result"]
@@ -132,10 +133,21 @@ class GroqChatbot:
                 json_str = extract_json_from_string(price_data["result"])
                 print("Extracted JSON string:", json_str)
                 response_data = json.loads(json_str)
-                result = {"score": sentiment_score, "dex": response_data}
+                dex_prices = response_data
             except json.JSONDecodeError:
-                result = {"score": sentiment_score, "dex": predicted_price}
-            return result
+                dex_prices = predicted_price  
+            
+            buying_dex = min(dex_prices, key=lambda d: dex_prices[d]["current_price"])
+            selling_dex = max(dex_prices, key=lambda d: dex_prices[d]["predicted_price"])
+            
+            result = {
+                "score": sentiment_score,
+                "dex": dex_prices,
+                "buying_dex": buying_dex,
+                "buy_price": dex_prices[buying_dex]["current_price"],
+                "selling_dex": selling_dex,
+                "sell_price": dex_prices[selling_dex]["predicted_price"],
+            }
         except Exception as e:
-            print("Error processing sentiment coins:", e)
-            return {"score": sentiment_score, "dex": predicted_price}
+            print("Error processing predicting coins:", e)
+        return result

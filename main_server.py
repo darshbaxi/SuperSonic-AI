@@ -12,7 +12,7 @@ def create_app():
     CORS(app)
     
     bot = GroqChatbot()
-    
+    get_server_status()
     load_agent("starter")
     
     @app.route('/chat', methods=['POST'])
