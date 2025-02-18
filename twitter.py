@@ -10,7 +10,7 @@ from util import (
 )
 
 app = Flask(__name__)
-BASE_URL = "https://defai.onrender.com"
+BASE_URL = "https://defai-3lma.onrender.com"
 
 def post_tweet(tweet_text: str):
     payload = {

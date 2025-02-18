@@ -5,7 +5,7 @@ import json
 import requests
 import urllib.parse
 
-BASE_URL = "https://defai.onrender.com"
+BASE_URL = "https://defai-3lma.onrender.com"
 
 def calculate_aggregate_score(sentiments):
     total_weighted_score = 0
