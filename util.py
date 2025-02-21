@@ -55,6 +55,7 @@ def system_predict(coin: str, score: int):
             Higher positive sentiment may increase the price, while negative sentiment may decrease it.
             Ensure that the effect is realistic and aligns with past market behavior.
             Return the adjusted price forecast in a structured JSON format.
+            
         '''
     return system_prompt
 

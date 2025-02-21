@@ -38,13 +38,14 @@ class GroqChatbot:
             Task:
             Extract cryptocurrency mentions from the tweet below./
             Identify both the full name and ticker symbol when available./
-            If only one is present, infer the missing part using common crypto knowledge./
+            If only ticker is present, infer the full part using common crypto knowledge./
+            If a new or lesser-known cryptocurrency (e.g., "Sonic") is mentioned, recognize it accordingly.
             Rules:
             If only the ticker (e.g., "ETH") is mentioned, convert it into the full name (e.g., "Ethereum").
             Output:
                 only full name of crypto currency in json format!!!
                 example:
-                    {"cryptocurrencies": ["Bitcoin"]}
+                    {"cryptocurrencies": ["Bitcoin","Sonic"]}
         '''
         query = " ".join(tweets)
         payload = {
