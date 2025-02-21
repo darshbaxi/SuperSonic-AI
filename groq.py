@@ -9,7 +9,7 @@ from util import (
     extract_json_from_string,
 )
 
-BASE_URL = "https://defai-3lma.onrender.com"
+BASE_URL = "https://defai-1.onrender.com"
 
 class GroqChatbot:
     def __init__(self):
