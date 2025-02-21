@@ -49,6 +49,7 @@ class GroqChatbot:
         '''
         query = " ".join(tweets)
         payload = {
+            
             "connection": "groq",
             "action": "generate-text",
             "params": [query, system_prompt],
